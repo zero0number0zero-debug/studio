@@ -1,5 +1,3 @@
-"use client"
-import { MOCK_PROJECTS } from "@/lib/placeholder-data";
 import { notFound } from "next/navigation";
 import {
   Card,
@@ -15,6 +13,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/placeholder-data";
 import { Separator } from "@/components/ui/separator";
+import { getProjectById } from "@/lib/projects-service";
 
 
 const statusColors: Record<Project['status'], string> = {
@@ -26,8 +25,8 @@ const statusColors: Record<Project['status'], string> = {
   'Completed': 'bg-secondary text-secondary-foreground',
 };
 
-export default function ProjectDetailsPage({ params }: { params: { id: string } }) {
-  const project = MOCK_PROJECTS.find(p => p.id === params.id);
+export default async function ProjectDetailsPage({ params }: { params: { id: string } }) {
+  const project = await getProjectById(params.id);
 
   if (!project) {
     notFound();

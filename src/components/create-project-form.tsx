@@ -16,7 +16,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
 import { PlusCircle, Sparkles } from "lucide-react"
 import {
   Form,
@@ -29,6 +28,7 @@ import {
 } from "@/components/ui/form";
 import { generateProjectName } from "@/ai/flows/generate-project-name";
 import { useToast } from "@/hooks/use-toast";
+import { createProject } from "@/lib/projects-service";
 
 const formSchema = z.object({
   name: z.string().min(2, "Project name must be at least 2 characters."),
@@ -37,14 +37,10 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-interface CreateProjectFormProps {
-  onCreateProject: (name: string, description: string) => void;
-}
-
-
-export function CreateProjectForm({ onCreateProject }: CreateProjectFormProps) {
+export function CreateProjectForm() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isGenerating, setIsGenerating] = React.useState(false);
+  const [isCreating, setIsCreating] = React.useState(false);
   const { toast } = useToast();
 
   const form = useForm<FormData>({
@@ -81,14 +77,26 @@ export function CreateProjectForm({ onCreateProject }: CreateProjectFormProps) {
     }
   };
 
-  const onSubmit = (data: FormData) => {
-    onCreateProject(data.name, data.description);
-    toast({
-      title: "Project Created!",
-      description: `The project "${data.name}" has been successfully created.`,
-    });
-    setIsOpen(false);
-    form.reset();
+  const onSubmit = async (data: FormData) => {
+    setIsCreating(true);
+    try {
+      await createProject(data.name, data.description);
+      toast({
+        title: "Project Created!",
+        description: `The project "${data.name}" has been successfully created.`,
+      });
+      setIsOpen(false);
+      form.reset();
+    } catch (error) {
+       console.error("Failed to create project:", error);
+       toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to create project. Please try again.",
+      });
+    } finally {
+       setIsCreating(false);
+    }
   };
 
   return (
@@ -132,14 +140,14 @@ export function CreateProjectForm({ onCreateProject }: CreateProjectFormProps) {
                   <div className="col-span-3">
                     <div className="flex gap-2">
                        <FormControl>
-                        <Input {...field} disabled={isGenerating} />
+                        <Input {...field} disabled={isGenerating || isCreating} />
                       </FormControl>
                       <Button
                         type="button"
                         variant="outline"
                         size="icon"
                         onClick={handleGenerateName}
-                        disabled={isGenerating}
+                        disabled={isGenerating || isCreating}
                         aria-label="Generate project name"
                       >
                         <Sparkles className={`h-4 w-4 ${isGenerating ? "animate-spin" : ""}`} />
@@ -151,7 +159,9 @@ export function CreateProjectForm({ onCreateProject }: CreateProjectFormProps) {
               )}
             />
             <DialogFooter>
-              <Button type="submit">Create</Button>
+              <Button type="submit" disabled={isCreating}>
+                {isCreating ? "Creating..." : "Create"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
