@@ -72,3 +72,16 @@ export const MOCK_PROJECTS: Project[] = [
     lastUpdate: '3 hours ago',
   }
 ];
+
+export const createNewProject = (name: string, description: string): Project => {
+  const newId = `PROJ-${String(MOCK_PROJECTS.length + 1).padStart(3, '0')}`;
+  return {
+    id: newId,
+    name,
+    description,
+    status: 'Initiation',
+    progress: 0,
+    team: [{ name: 'User', avatarUrl: 'https://picsum.photos/seed/user/40/40' }],
+    lastUpdate: 'Just now',
+  };
+};

@@ -37,7 +37,12 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export function CreateProjectForm() {
+interface CreateProjectFormProps {
+  onCreateProject: (name: string, description: string) => void;
+}
+
+
+export function CreateProjectForm({ onCreateProject }: CreateProjectFormProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isGenerating, setIsGenerating] = React.useState(false);
   const { toast } = useToast();
@@ -77,7 +82,7 @@ export function CreateProjectForm() {
   };
 
   const onSubmit = (data: FormData) => {
-    console.log("Project Created:", data);
+    onCreateProject(data.name, data.description);
     toast({
       title: "Project Created!",
       description: `The project "${data.name}" has been successfully created.`,
