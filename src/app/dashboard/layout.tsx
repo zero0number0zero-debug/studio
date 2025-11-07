@@ -47,7 +47,7 @@ export default function DashboardLayout({
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={{ children: 'Projects' }}>
-                <Link href="#">
+                <Link href="/dashboard">
                   <FolderKanban />
                   <span>Projects</span>
                 </Link>
