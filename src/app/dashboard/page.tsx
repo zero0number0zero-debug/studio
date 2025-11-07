@@ -1,17 +1,13 @@
-import { Button } from "@/components/ui/button"
+import { CreateProjectForm } from "@/components/create-project-form"
 import { ProjectCard } from "@/components/project-card"
 import { MOCK_PROJECTS } from "@/lib/placeholder-data"
-import { PlusCircle } from "lucide-react"
 
 export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold font-headline text-foreground">Dashboard</h1>
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Create Project
-        </Button>
+        <CreateProjectForm />
       </div>
 
       <section>
