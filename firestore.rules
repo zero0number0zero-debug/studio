@@ -2,9 +2,11 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /projects/{projectId} {
+    // This rule allows read and write access to all documents in the 'projects' collection.
+    // WARNING: This is insecure for production. You should implement authentication
+    // and more specific rules before deploying your app.
+    match /projects/{projectId}/{document=**} {
       allow read, write: if true;
-      allow delete: if false;
     }
     match /{document=**} {
       allow read, write: if false;
