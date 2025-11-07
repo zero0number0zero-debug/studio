@@ -9,6 +9,8 @@ import {
   getDocs,
   addDoc,
   serverTimestamp,
+  query,
+  orderBy,
 } from 'firebase/firestore';
 import {db} from '@/lib/firebase/firestore';
 import {MOCK_PROJECTS, type Project} from '@/lib/placeholder-data';
@@ -18,33 +20,15 @@ const PROJECTS_COLLECTION = 'projects';
 
 export async function getProjects(): Promise<Project[]> {
   try {
-    const querySnapshot = await getDocs(collection(db, PROJECTS_COLLECTION));
+    const projectsRef = collection(db, PROJECTS_COLLECTION);
+    const q = query(projectsRef, orderBy('createdAt', 'desc'));
+    const querySnapshot = await getDocs(q);
+
     if (querySnapshot.empty) {
-      console.log('No projects found, seeding database...');
-      for (const project of MOCK_PROJECTS) {
-        // Use a different variable name to avoid shadowing
-        const { id, ...projectData } = project;
-        await addDoc(collection(db, PROJECTS_COLLECTION), {
-          ...projectData,
-          createdAt: serverTimestamp(),
-        });
-      }
-      // After seeding, get the data again to have correct IDs
-      const seededSnapshot = await getDocs(collection(db, PROJECTS_COLLECTION));
-      const projects = seededSnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          name: data.name,
-          description: data.description,
-          status: data.status,
-          progress: data.progress,
-          team: data.team,
-          lastUpdate: data.lastUpdate || 'N/A',
-        } as Project;
-      });
-       return projects.sort((a,b) => b.createdAt.seconds - a.createdAt.seconds);
+      console.log('No projects found in Firestore.');
+      return [];
     }
+
     const projects = querySnapshot.docs.map(doc => {
       const data = doc.data();
       return {
@@ -58,10 +42,12 @@ export async function getProjects(): Promise<Project[]> {
         createdAt: data.createdAt,
       } as Project;
     });
-    return projects.sort((a,b) => b.createdAt.seconds - a.createdAt.seconds);
+
+    return projects;
   } catch (error) {
-    console.error('Error getting projects: ', error);
+    console.error('Error getting projects from Firestore: ', error);
     // Return mock data as a fallback if firestore fails
+    console.log('Returning mock projects as a fallback.');
     return MOCK_PROJECTS;
   }
 }
