@@ -1,5 +1,3 @@
-import data from './placeholder-images.json';
-
 export type ImagePlaceholder = {
   id: string;
   description: string;
@@ -7,4 +5,5 @@ export type ImagePlaceholder = {
   imageHint: string;
 };
 
-export const PlaceHolderImages: ImagePlaceholder[] = data.placeholderImages;
+// This file is kept for type definition, but the data is no longer stored here.
+export const PlaceHolderImages: ImagePlaceholder[] = [];

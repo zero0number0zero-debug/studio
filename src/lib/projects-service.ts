@@ -14,7 +14,6 @@ import {
 } from 'firebase/firestore';
 import {db} from '@/lib/firebase/firestore';
 import type { Project } from '@/lib/types';
-import { revalidatePath } from 'next/cache';
 
 const PROJECTS_COLLECTION = 'projects';
 
@@ -93,8 +92,6 @@ export const createProject = async (
   };
 
   const docRef = await addDoc(collection(db, PROJECTS_COLLECTION), newProjectData);
-
-  revalidatePath('/dashboard');
 
   return {
     id: docRef.id,

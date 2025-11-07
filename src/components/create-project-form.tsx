@@ -4,6 +4,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { revalidatePath } from 'next/cache'
 import {
   Dialog,
   DialogContent,
@@ -58,6 +59,8 @@ export function CreateProjectForm() {
       });
       setIsOpen(false);
       form.reset();
+      // Revalidate the dashboard path to show the new project
+      revalidatePath('/dashboard');
     } catch (error) {
        console.error("Failed to create project:", error);
        toast({
@@ -89,24 +92,9 @@ export function CreateProjectForm() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
             <FormField
               control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem className="grid grid-cols-4 items-start gap-4">
-                  <FormLabel className="text-right pt-2">Description</FormLabel>
-                  <div className="col-span-3">
-                    <FormControl>
-                      <Textarea {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem className="grid grid-cols-4 items-start gap-4">
+                <FormItem className="grid grid-cols-4 items-center gap-4">
                   <FormLabel className="text-right pt-2">Name</FormLabel>
                   <div className="col-span-3">
                     <FormControl>
@@ -117,6 +105,22 @@ export function CreateProjectForm() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-4 items-center gap-4">
+                  <FormLabel className="text-right pt-2">Description</FormLabel>
+                  <div className="col-span-3">
+                    <FormControl>
+                      <Textarea {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+            
             <DialogFooter>
               <Button type="submit" disabled={isCreating}>
                 {isCreating ? "Creating..." : "Create"}
