@@ -16,17 +16,15 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { PlusCircle, Sparkles } from "lucide-react"
+import { PlusCircle } from "lucide-react"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { generateProjectName } from "@/ai/flows/generate-project-name";
 import { useToast } from "@/hooks/use-toast";
 import { createProject } from "@/lib/projects-service";
 
@@ -39,7 +37,6 @@ type FormData = z.infer<typeof formSchema>;
 
 export function CreateProjectForm() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [isGenerating, setIsGenerating] = React.useState(false);
   const [isCreating, setIsCreating] = React.useState(false);
   const { toast } = useToast();
 
@@ -50,32 +47,6 @@ export function CreateProjectForm() {
       description: "",
     },
   });
-
-  const handleGenerateName = async () => {
-    const description = form.getValues("description");
-    if (!description || description.length < 10) {
-      form.setError("description", {
-        type: "manual",
-        message: "Please enter a description of at least 10 characters to generate a name.",
-      });
-      return;
-    }
-
-    setIsGenerating(true);
-    try {
-      const result = await generateProjectName({ projectDescription: description });
-      form.setValue("name", result.projectName, { shouldValidate: true });
-    } catch (error) {
-      console.error("Failed to generate project name:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to generate project name. Please try again.",
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
 
   const onSubmit = async (data: FormData) => {
     setIsCreating(true);
@@ -138,21 +109,9 @@ export function CreateProjectForm() {
                 <FormItem className="grid grid-cols-4 items-start gap-4">
                   <FormLabel className="text-right pt-2">Name</FormLabel>
                   <div className="col-span-3">
-                    <div className="flex gap-2">
-                       <FormControl>
-                        <Input {...field} disabled={isGenerating || isCreating} />
-                      </FormControl>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        onClick={handleGenerateName}
-                        disabled={isGenerating || isCreating}
-                        aria-label="Generate project name"
-                      >
-                        <Sparkles className={`h-4 w-4 ${isGenerating ? "animate-spin" : ""}`} />
-                      </Button>
-                    </div>
+                    <FormControl>
+                      <Input {...field} disabled={isCreating} />
+                    </FormControl>
                     <FormMessage />
                   </div>
                 </FormItem>
