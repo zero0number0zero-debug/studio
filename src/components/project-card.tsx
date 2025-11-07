@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import placeholderImages from '@/lib/placeholder-images.json';
 
 interface ProjectCardProps {
   project: Project;
@@ -29,6 +30,7 @@ const statusColors: Record<Project['status'], string> = {
 
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const teamImages = placeholderImages.teamAvatars;
   return (
     <Link href={`/dashboard/projects/${project.id}`} className="block">
       <Card className="flex flex-col h-full hover:shadow-xl transition-shadow duration-300 border-transparent hover:border-primary/20">
@@ -54,7 +56,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                   <Tooltip key={index}>
                     <TooltipTrigger asChild>
                        <Avatar className="h-8 w-8 border-2 border-card">
-                        <AvatarImage src={member.avatarUrl} alt={member.name} data-ai-hint="person face" />
+                        <AvatarImage src={teamImages[index % teamImages.length]?.imageUrl} alt={member.name} data-ai-hint="person face" />
                         <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                     </TooltipTrigger>

@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/types";
 import { Separator } from "@/components/ui/separator";
 import { getProjectById } from "@/lib/projects-service";
+import placeholderImages from '@/lib/placeholder-images.json';
 
 
 const statusColors: Record<Project['status'], string> = {
@@ -31,6 +32,8 @@ export default async function ProjectDetailsPage({ params }: { params: { id: str
   if (!project) {
     notFound();
   }
+
+  const teamImages = placeholderImages.teamAvatars;
 
   return (
     <div className="space-y-6">
@@ -66,7 +69,7 @@ export default async function ProjectDetailsPage({ params }: { params: { id: str
                     <Tooltip key={index}>
                       <TooltipTrigger asChild>
                          <Avatar className="h-10 w-10 border-2 border-card">
-                          <AvatarImage src={member.avatarUrl} alt={member.name} data-ai-hint="person face" />
+                          <AvatarImage src={teamImages[index % teamImages.length]?.imageUrl} alt={member.name} data-ai-hint="person face" />
                           <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                       </TooltipTrigger>

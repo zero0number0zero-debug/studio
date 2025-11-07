@@ -4,7 +4,6 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { revalidatePath } from 'next/cache'
 import {
   Dialog,
   DialogContent,
@@ -28,6 +27,7 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { createProject } from "@/lib/projects-service";
+import { revalidatePath } from "next/cache";
 
 const formSchema = z.object({
   name: z.string().min(2, "Project name must be at least 2 characters."),
@@ -57,10 +57,9 @@ export function CreateProjectForm() {
         title: "Project Created!",
         description: `The project "${data.name}" has been successfully created.`,
       });
+      revalidatePath('/dashboard');
       setIsOpen(false);
       form.reset();
-      // Revalidate the dashboard path to show the new project
-      revalidatePath('/dashboard');
     } catch (error) {
        console.error("Failed to create project:", error);
        toast({

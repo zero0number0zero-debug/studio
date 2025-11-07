@@ -1,5 +1,3 @@
-// This is a temporary file to bridge the gap until we have a real backend.
-// It will be replaced with a real backend service.
 'use server';
 
 import {
@@ -80,21 +78,21 @@ export async function getProjectById(id: string): Promise<Project | null> {
 export const createProject = async (
   name: string,
   description: string
-): Promise<Project> => {
+): Promise<string> => {
   const newProjectData = {
     name,
     description,
     status: 'Initiation',
     progress: 0,
-    team: [{name: 'User', avatarUrl: 'https://picsum.photos/seed/user/40/40'}],
+    team: [
+      { name: 'User', avatarUrl: '' },
+      { name: 'AI Assistant', avatarUrl: '' },
+    ],
     lastUpdate: 'Just now',
     createdAt: serverTimestamp(),
   };
 
   const docRef = await addDoc(collection(db, PROJECTS_COLLECTION), newProjectData);
-
-  return {
-    id: docRef.id,
-    ...newProjectData,
-  } as Project;
+  
+  return docRef.id;
 };

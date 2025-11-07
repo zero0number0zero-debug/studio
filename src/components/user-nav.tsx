@@ -18,9 +18,10 @@ import { LogOut, Settings, User } from "lucide-react"
 import Link from "next/link"
 import { useSidebar } from "./ui/sidebar"
 import { cn } from "@/lib/utils"
+import placeholderImages from '@/lib/placeholder-images.json';
 
 export function UserNav() {
-  const userAvatarUrl = "https://picsum.photos/seed/user-avatar/40/40";
+  const userAvatarUrl = placeholderImages.userAvatar.imageUrl;
   const { state, isMobile } = useSidebar();
 
   if (state === 'collapsed' && !isMobile) {
