@@ -5,21 +5,25 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/logo';
 
-export default function LoginPage() {
+export default function SignupPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-background p-4">
       <Card className="mx-auto max-w-sm w-full shadow-lg">
         <CardHeader className="space-y-4">
           <div className="w-full flex justify-center">
-              <Logo />
+            <Logo />
           </div>
-          <CardTitle className="text-2xl text-center font-headline">Login</CardTitle>
+          <CardTitle className="text-2xl text-center font-headline">Sign Up</CardTitle>
           <CardDescription className="text-center">
-            Enter your email below to login to your account
+            Enter your information to create an account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="full-name">Full Name</Label>
+              <Input id="full-name" placeholder="John Doe" required />
+            </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -27,29 +31,20 @@ export default function LoginPage() {
                 type="email"
                 placeholder="m@example.com"
                 required
-                defaultValue="user@example.com"
               />
             </div>
             <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link href="/forgot-password" className="ml-auto inline-block text-sm underline text-primary hover:text-accent">
-                  Forgot your password?
-                </Link>
-              </div>
-              <Input id="password" type="password" required defaultValue="password" />
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" type="password" required />
             </div>
-            <Button asChild className="w-full">
-              <Link href="/dashboard">Login</Link>
-            </Button>
-            <Button variant="outline" className="w-full">
-              Login with Google
+            <Button type="submit" className="w-full">
+              Create an account
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <Link href="/signup" className="underline text-primary hover:text-accent">
-              Sign up
+            Already have an account?{' '}
+            <Link href="/" className="underline text-primary hover:text-accent">
+              Login
             </Link>
           </div>
         </CardContent>
