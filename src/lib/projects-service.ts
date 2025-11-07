@@ -13,7 +13,7 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import {db} from '@/lib/firebase/firestore';
-import {MOCK_PROJECTS, type Project} from '@/lib/placeholder-data';
+import type { Project } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 
 const PROJECTS_COLLECTION = 'projects';
@@ -46,9 +46,8 @@ export async function getProjects(): Promise<Project[]> {
     return projects;
   } catch (error) {
     console.error('Error getting projects from Firestore: ', error);
-    // Return mock data as a fallback if firestore fails
-    console.log('Returning mock projects as a fallback.');
-    return MOCK_PROJECTS;
+    console.log('Returning empty array as a fallback.');
+    return [];
   }
 }
 
@@ -70,14 +69,12 @@ export async function getProjectById(id: string): Promise<Project | null> {
                 lastUpdate: data.lastUpdate || 'N/A',
             } as Project
         } else {
-            console.log("No such document!");
+            console.log("No such document in Firestore!");
             return null;
         }
     } catch (error) {
         console.error("Error getting document:", error);
-        // Fallback to mock data if firestore fails
-        const project = MOCK_PROJECTS.find(p => p.id === id);
-        return project || null;
+        return null;
     }
 }
 

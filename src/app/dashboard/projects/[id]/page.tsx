@@ -11,7 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import type { Project } from "@/lib/placeholder-data";
+import type { Project } from "@/lib/types";
 import { Separator } from "@/components/ui/separator";
 import { getProjectById } from "@/lib/projects-service";
 

@@ -1,4 +1,4 @@
-import type { Project } from "@/lib/placeholder-data";
+import type { Project } from "@/lib/types";
 import {
   Card,
   CardContent,

@@ -16,12 +16,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { LogOut, Settings, User } from "lucide-react"
 import Link from "next/link"
-import { PlaceHolderImages } from "@/lib/placeholder-images"
 import { useSidebar } from "./ui/sidebar"
 import { cn } from "@/lib/utils"
 
 export function UserNav() {
-  const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
+  const userAvatarUrl = "https://picsum.photos/seed/user-avatar/40/40";
   const { state, isMobile } = useSidebar();
 
   if (state === 'collapsed' && !isMobile) {
@@ -30,7 +29,7 @@ export function UserNav() {
         <DropdownMenuTrigger asChild>
            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-9 w-9">
-              {userAvatar && <AvatarImage src={userAvatar.imageUrl} data-ai-hint={userAvatar.imageHint} alt="User avatar" />}
+              <AvatarImage src={userAvatarUrl} data-ai-hint="person face" alt="User avatar" />
               <AvatarFallback>U</AvatarFallback>
             </Avatar>
           </Button>
@@ -52,7 +51,7 @@ export function UserNav() {
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
           <Avatar className="h-8 w-8">
-            {userAvatar && <AvatarImage src={userAvatar.imageUrl} data-ai-hint={userAvatar.imageHint} alt="User avatar" />}
+            <AvatarImage src={userAvatarUrl} data-ai-hint="person face" alt="User avatar" />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
           <div className={cn("flex flex-col", (state === 'collapsed' && !isMobile) && 'hidden')}>
