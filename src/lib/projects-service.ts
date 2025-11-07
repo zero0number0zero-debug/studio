@@ -22,37 +22,50 @@ export async function getProjects(): Promise<Project[]> {
     if (querySnapshot.empty) {
       console.log('No projects found, seeding database...');
       for (const project of MOCK_PROJECTS) {
+        // Use a different variable name to avoid shadowing
+        const { id, ...projectData } = project;
         await addDoc(collection(db, PROJECTS_COLLECTION), {
-          ...project,
+          ...projectData,
           createdAt: serverTimestamp(),
         });
       }
+      // After seeding, get the data again to have correct IDs
       const seededSnapshot = await getDocs(collection(db, PROJECTS_COLLECTION));
       const projects = seededSnapshot.docs.map(doc => {
         const data = doc.data();
         return {
           id: doc.id,
-          ...data,
+          name: data.name,
+          description: data.description,
+          status: data.status,
+          progress: data.progress,
+          team: data.team,
           lastUpdate: data.lastUpdate || 'N/A',
         } as Project;
       });
-       return projects;
+       return projects.sort((a,b) => b.createdAt.seconds - a.createdAt.seconds);
     }
     const projects = querySnapshot.docs.map(doc => {
       const data = doc.data();
       return {
         id: doc.id,
-        ...data,
+        name: data.name,
+        description: data.description,
+        status: data.status,
+        progress: data.progress,
+        team: data.team,
         lastUpdate: data.lastUpdate || 'N/A',
+        createdAt: data.createdAt,
       } as Project;
     });
-    return projects;
+    return projects.sort((a,b) => b.createdAt.seconds - a.createdAt.seconds);
   } catch (error) {
     console.error('Error getting projects: ', error);
     // Return mock data as a fallback if firestore fails
     return MOCK_PROJECTS;
   }
 }
+
 
 export async function getProjectById(id: string): Promise<Project | null> {
     try {
@@ -63,7 +76,11 @@ export async function getProjectById(id: string): Promise<Project | null> {
             const data = docSnap.data();
             return {
                 id: docSnap.id,
-                ...data,
+                name: data.name,
+                description: data.description,
+                status: data.status,
+                progress: data.progress,
+                team: data.team,
                 lastUpdate: data.lastUpdate || 'N/A',
             } as Project
         } else {

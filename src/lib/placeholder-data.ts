@@ -6,6 +6,7 @@ export type Project = {
   progress: number;
   team: { name: string; avatarUrl: string }[];
   lastUpdate: string;
+  createdAt?: any;
 };
 
 export const MOCK_PROJECTS: Project[] = [
