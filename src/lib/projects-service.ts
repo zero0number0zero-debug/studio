@@ -49,7 +49,8 @@ export async function getProjects(): Promise<Project[]> {
     return projects;
   } catch (error) {
     console.error('Error getting projects: ', error);
-    return [];
+    // Return mock data as a fallback if firestore fails
+    return MOCK_PROJECTS;
   }
 }
 
@@ -71,7 +72,9 @@ export async function getProjectById(id: string): Promise<Project | null> {
         }
     } catch (error) {
         console.error("Error getting document:", error);
-        return null;
+        // Fallback to mock data if firestore fails
+        const project = MOCK_PROJECTS.find(p => p.id === id);
+        return project || null;
     }
 }
 
